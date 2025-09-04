@@ -34,6 +34,11 @@ namespace FactoryTracking.API.Controllers
                     return Unauthorized(new { message = "Invalid user token" });
                 }
 
+                if (string.IsNullOrWhiteSpace(request.Title))
+                {
+                    return BadRequest(new { message = "Title is required" });
+                }
+
                 if (string.IsNullOrWhiteSpace(request.Description))
                 {
                     return BadRequest(new { message = "Description is required" });
@@ -42,11 +47,14 @@ namespace FactoryTracking.API.Controllers
                 var stopCard = new StopCard
                 {
                     UserId = userId,
+                    Title = request.Title.Trim(),
                     Description = request.Description.Trim(),
+                    Priority = request.Priority,
                     ImageUrls = request.ImageUrls != null && request.ImageUrls.Any()
                         ? System.Text.Json.JsonSerializer.Serialize(request.ImageUrls)
                         : null,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
                 };
 
                 _context.StopCards.Add(stopCard);
@@ -80,8 +88,10 @@ namespace FactoryTracking.API.Controllers
                     .Select(sc => new StopCardDto
                     {
                         Id = sc.Id,
+                        Title = sc.Title,
                         Description = sc.Description,
-                        HasImages = !string.IsNullOrEmpty(sc.ImageUrls),
+                        Priority = sc.Priority.ToString(),
+                        Status = sc.Status.ToString(),
                         CreatedAt = sc.CreatedAt
                     })
                     .ToListAsync();
@@ -111,10 +121,11 @@ namespace FactoryTracking.API.Controllers
                     .Select(sc => new StopCardDetailDto
                     {
                         Id = sc.Id,
+                        Title = sc.Title,
                         Description = sc.Description,
-                        ImageUrls = !string.IsNullOrEmpty(sc.ImageUrls) 
-                            ? System.Text.Json.JsonSerializer.Deserialize<List<string>>(sc.ImageUrls) ?? new List<string>()
-                            : new List<string>(),
+                        Priority = sc.Priority.ToString(),
+                        Status = sc.Status.ToString(),
+                        ImageUrls = new List<string>(),
                         CreatedAt = sc.CreatedAt
                     })
                     .FirstOrDefaultAsync();
@@ -195,9 +206,7 @@ namespace FactoryTracking.API.Controllers
                         Status = sc.Status.ToString(),
                         UserName = sc.User.FullName,
                         UserEmail = sc.User.Email,
-                        ImageUrls = !string.IsNullOrEmpty(sc.ImageUrls) 
-                            ? System.Text.Json.JsonSerializer.Deserialize<List<string>>(sc.ImageUrls) ?? new List<string>()
-                            : new List<string>(),
+                        ImageUrls = new List<string>(),
                         CreatedAt = sc.CreatedAt,
                         UpdatedAt = sc.UpdatedAt
                     })

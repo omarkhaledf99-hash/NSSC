@@ -46,7 +46,7 @@ namespace FactoryTracking.API.Data
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Status).HasConversion<int>();
                 entity.Property(e => e.Description).HasMaxLength(500);
-                entity.Property(e => e.ImageUrls).HasColumnType("nvarchar(max)");
+                // SQLite will use TEXT type by default for string properties
 
                 // Foreign key relationships
                 entity.HasOne(e => e.User)
@@ -65,7 +65,7 @@ namespace FactoryTracking.API.Data
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Description).IsRequired().HasMaxLength(1000);
-                entity.Property(e => e.ImageUrls).HasColumnType("nvarchar(max)");
+                // SQLite will use TEXT type by default for string properties
 
                 // Foreign key relationship
                 entity.HasOne(e => e.User)

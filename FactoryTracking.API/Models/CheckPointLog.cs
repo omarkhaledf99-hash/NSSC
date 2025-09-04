@@ -20,7 +20,6 @@ namespace FactoryTracking.API.Models
         [StringLength(500)]
         public string? Description { get; set; }
 
-        [Column(TypeName = "nvarchar(max)")]
         public string? ImageUrls { get; set; } // JSON array of image URLs
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

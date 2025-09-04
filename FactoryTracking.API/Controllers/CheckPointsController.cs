@@ -216,9 +216,7 @@ namespace FactoryTracking.API.Controllers
                         UserEmail = log.User.Email,
                         Status = log.Status.ToString(),
                         Description = log.Description,
-                        ImageUrls = !string.IsNullOrEmpty(log.ImageUrls) 
-                            ? System.Text.Json.JsonSerializer.Deserialize<List<string>>(log.ImageUrls) ?? new List<string>()
-                            : new List<string>(),
+                        ImageUrls = new List<string>(),
                         CreatedAt = log.CreatedAt
                     })
                     .ToListAsync();

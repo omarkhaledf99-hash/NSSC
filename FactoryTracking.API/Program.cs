@@ -15,7 +15,7 @@ builder.Services.AddSwaggerGen();
 
 // Entity Framework Configuration
 builder.Services.AddDbContext<FactoryTrackingDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // CORS Configuration
 builder.Services.AddCors(options =>
