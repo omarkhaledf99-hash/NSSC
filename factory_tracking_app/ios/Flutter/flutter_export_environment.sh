@@ -1,6 +1,6 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/Users/jooelhaw/Downloads/NSSC/sdk/flutter"
+export "FLUTTER_ROOT=/Users/jooelhaw/Downloads/sdk/flutter"
 export "FLUTTER_APPLICATION_PATH=/Users/jooelhaw/Downloads/NSSC/factory_tracking_app"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_TARGET=lib/main.dart"
