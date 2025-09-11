@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/constants.dart';
@@ -93,25 +92,25 @@ class ApiService {
         switch (method.toUpperCase()) {
           case 'GET':
             response = await _client.get(url, headers: headers)
-                .timeout(Duration(seconds: _timeoutSeconds));
+                .timeout(const Duration(seconds: _timeoutSeconds));
             break;
           case 'POST':
             response = await _client.post(
               url,
               headers: headers,
               body: body != null ? jsonEncode(body) : null,
-            ).timeout(Duration(seconds: _timeoutSeconds));
+            ).timeout(const Duration(seconds: _timeoutSeconds));
             break;
           case 'PUT':
             response = await _client.put(
               url,
               headers: headers,
               body: body != null ? jsonEncode(body) : null,
-            ).timeout(Duration(seconds: _timeoutSeconds));
+            ).timeout(const Duration(seconds: _timeoutSeconds));
             break;
           case 'DELETE':
             response = await _client.delete(url, headers: headers)
-                .timeout(Duration(seconds: _timeoutSeconds));
+                .timeout(const Duration(seconds: _timeoutSeconds));
             break;
           default:
             return ApiResponse.error('Unsupported HTTP method: $method');
@@ -135,7 +134,7 @@ class ApiService {
       }
     }
     
-    return ApiResponse.error('${ErrorMessages.unknownError} (${_maxRetries} attempts)');
+    return ApiResponse.error('${ErrorMessages.unknownError} ($_maxRetries attempts)');
   }
   
   // Handle HTTP response
@@ -344,7 +343,7 @@ extension ApiServiceMethods on ApiService {
       request.files.add(file);
       
       final streamedResponse = await request.send()
-           .timeout(Duration(seconds: ApiConstants.uploadTimeoutSeconds));
+           .timeout(const Duration(seconds: ApiConstants.uploadTimeoutSeconds));
       
       final response = await http.Response.fromStream(streamedResponse);
       
