@@ -22,6 +22,9 @@ dependencies:
   # Local storage for tokens
   shared_preferences: ^2.2.2
   
+  # Secure storage for JWT tokens
+  flutter_secure_storage: ^9.0.0
+  
   # QR code scanning (temporarily disabled due to build issues)
   # qr_code_scanner: ^1.0.1
   
