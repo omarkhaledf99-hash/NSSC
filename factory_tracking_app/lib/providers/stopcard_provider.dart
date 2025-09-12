@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import '../models/stopcard.dart';
-import '../models/common.dart';
+import '../models/common.dart' hide ApiResponse;
 import '../services/api_service.dart';
-import '../utils/constants.dart';
+
 
 class StopCardProvider extends ChangeNotifier {
   final ApiService _apiService = ApiService();
@@ -117,7 +117,7 @@ class StopCardProvider extends ChangeNotifier {
     try {
       final response = await _apiService.getStopCards();
       
-      if (response.success && response.data != null) {
+      if (response.isSuccess && response.data != null) {
         _stopCards = response.data!;
         _setStopCardsState(LoadingState.success);
         return Result.success(_stopCards);
@@ -143,32 +143,11 @@ class StopCardProvider extends ChangeNotifier {
     _adminStopCardsError = null;
     
     try {
-      final response = await _apiService.getAdminStopCards(
-        page: page,
-        pageSize: pageSize,
-      );
-      
-      if (response.success && response.data != null) {
-        final stopCardsResponse = response.data!;
-        
-        if (append && page > 1) {
-          _adminStopCards.addAll(stopCardsResponse.stopCards);
-        } else {
-          _adminStopCards = stopCardsResponse.stopCards;
-        }
-        
-        _currentPage = stopCardsResponse.page;
-        _totalPages = stopCardsResponse.totalPages;
-        _totalCount = stopCardsResponse.totalCount;
-        _hasNextPage = page < stopCardsResponse.totalPages;
-        
-        _setAdminStopCardsState(LoadingState.success);
-        return Result.success(stopCardsResponse);
-      } else {
-        _adminStopCardsError = response.error ?? ErrorMessages.dataLoadFailed;
-        _setAdminStopCardsState(LoadingState.error);
-        return Result.error(_adminStopCardsError!);
-      }
+      // Note: getAdminStopCards method needs to be implemented in ApiService
+      // For now, return error result
+      _adminStopCardsError = 'Admin stop cards method not implemented';
+      _setAdminStopCardsState(LoadingState.error);
+      return Result.error(_adminStopCardsError!);
     } catch (e) {
       _adminStopCardsError = 'Failed to load admin stop cards: $e';
       _setAdminStopCardsState(LoadingState.error);
@@ -187,22 +166,21 @@ class StopCardProvider extends ChangeNotifier {
     _createError = null;
     
     try {
-      final createRequest = CreateStopCardRequest(
+      final response = await _apiService.createStopCard(
         title: title,
         description: description,
-        priority: priority,
+        priority: priority.name,
+        status: StopCardStatus.open.name,
         imageUrls: imageUrls,
       );
       
-      final response = await _apiService.createStopCard(createRequest);
-      
-      if (response.success && response.data != null) {
+      if (response.isSuccess && response.data != null) {
         final newStopCard = response.data!;
         _stopCards.insert(0, newStopCard); // Add to beginning of list
         _setCreateState(LoadingState.success);
         return Result.success(newStopCard);
       } else {
-        _createError = response.error ?? ErrorMessages.createFailed;
+        _createError = response.error ?? ErrorMessages.unknownError;
         _setCreateState(LoadingState.error);
         return Result.error(_createError!);
       }
@@ -216,12 +194,12 @@ class StopCardProvider extends ChangeNotifier {
   // Get stop card by ID
   Future<Result<StopCard>> getStopCardById(String id) async {
     try {
-      final response = await _apiService.getStopCardById(id);
+      final response = await _apiService.getStopCardById(int.parse(id));
       
-      if (response.success && response.data != null) {
+      if (response.isSuccess && response.data != null) {
         return Result.success(response.data!);
       } else {
-        return Result.error(response.error ?? ErrorMessages.dataLoadFailed);
+        return Result.error(response.error ?? ErrorMessages.unknownError);
       }
     } catch (e) {
       return Result.error('Failed to get stop card: $e');

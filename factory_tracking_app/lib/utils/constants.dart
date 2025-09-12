@@ -23,38 +23,7 @@ class ApiConstants {
   static const String lastLoginKey = 'last_login';
 }
 
-// Error Messages
-class ErrorMessages {
-  static const String networkError = 'No internet connection available';
-  static const String timeoutError = 'Request timeout. Please try again.';
-  static const String serverError = 'Server error. Please try again later.';
-  static const String unauthorizedError = 'Session expired. Please login again.';
-  static const String forbiddenError = 'Access denied. Insufficient permissions.';
-  static const String notFoundError = 'Resource not found.';
-  static const String validationError = 'Invalid input data.';
-  static const String unknownError = 'An unexpected error occurred.';
-  
-  // Authentication
-  static const String invalidCredentials = 'Invalid email or password.';
-  static const String loginRequired = 'Please login to continue.';
-  
-  // Image Upload
-  static const String imageUploadError = 'Failed to upload image.';
-  static const String imageSizeError = 'Image size too large.';
-  static const String imageFormatError = 'Unsupported image format.';
-  
-  // QR Code
-  static const String qrScanError = 'Failed to scan QR code.';
-  static const String invalidQrCode = 'Invalid QR code format.';
-  
-  // Stop Cards
-  static const String stopCardCreateError = 'Failed to create stop card.';
-  static const String stopCardUpdateError = 'Failed to update stop card.';
-  
-  // CheckPoints
-  static const String checkPointScanError = 'Failed to scan checkpoint.';
-  static const String checkPointNotFound = 'Checkpoint not found.';
-}
+
 
 // App Constants
 class AppConstants {

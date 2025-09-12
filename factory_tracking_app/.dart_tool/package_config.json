@@ -296,12 +296,6 @@
       "languageVersion": "3.4"
     },
     {
-      "name": "js",
-      "rootUri": "file:///Users/jooelhaw/.pub-cache/hosted/pub.dev/js-0.6.7",
-      "packageUri": "lib/",
-      "languageVersion": "2.19"
-    },
-    {
       "name": "json_annotation",
       "rootUri": "file:///Users/jooelhaw/.pub-cache/hosted/pub.dev/json_annotation-4.9.0",
       "packageUri": "lib/",
@@ -476,12 +470,6 @@
       "languageVersion": "3.6"
     },
     {
-      "name": "qr_code_scanner",
-      "rootUri": "file:///Users/jooelhaw/.pub-cache/hosted/pub.dev/qr_code_scanner-1.0.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.17"
-    },
-    {
       "name": "shared_preferences",
       "rootUri": "file:///Users/jooelhaw/.pub-cache/hosted/pub.dev/shared_preferences-2.5.3",
       "packageUri": "lib/",
@@ -653,12 +641,12 @@
       "name": "factory_tracking_app",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.8"
     }
   ],
   "generator": "pub",
   "generatorVersion": "3.9.2",
   "flutterRoot": "file:///Users/jooelhaw/Downloads/sdk/flutter",
-  "flutterVersion": "3.35.4-0.0.pre-1",
+  "flutterVersion": "3.35.3",
   "pubCache": "file:///Users/jooelhaw/.pub-cache"
 }

@@ -14,7 +14,6 @@
         "json_annotation",
         "permission_handler",
         "provider",
-        "qr_code_scanner",
         "shared_preferences"
       ],
       "devDependencies": [
@@ -143,15 +142,6 @@
         "image_picker_macos",
         "image_picker_platform_interface",
         "image_picker_windows"
-      ]
-    },
-    {
-      "name": "qr_code_scanner",
-      "version": "1.0.1",
-      "dependencies": [
-        "flutter",
-        "flutter_web_plugins",
-        "js"
       ]
     },
     {
@@ -686,20 +676,6 @@
       ]
     },
     {
-      "name": "flutter_web_plugins",
-      "version": "0.0.0",
-      "dependencies": [
-        "flutter"
-      ]
-    },
-    {
-      "name": "js",
-      "version": "0.6.7",
-      "dependencies": [
-        "meta"
-      ]
-    },
-    {
       "name": "shared_preferences_windows",
       "version": "2.4.1",
       "dependencies": [
@@ -893,6 +869,13 @@
       "version": "2.1.8",
       "dependencies": [
         "meta"
+      ]
+    },
+    {
+      "name": "flutter_web_plugins",
+      "version": "0.0.0",
+      "dependencies": [
+        "flutter"
       ]
     },
     {

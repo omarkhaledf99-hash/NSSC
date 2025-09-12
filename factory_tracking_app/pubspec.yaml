@@ -6,8 +6,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
-  flutter: ">=3.10.0"
+  sdk: '>=3.8.0 <4.0.0'
+  flutter: ">=1.17.0"
 
 dependencies:
   flutter:
@@ -22,8 +22,8 @@ dependencies:
   # Local storage for tokens
   shared_preferences: ^2.2.2
   
-  # QR code scanning
-  qr_code_scanner: ^1.0.1
+  # QR code scanning (temporarily disabled due to build issues)
+  # qr_code_scanner: ^1.0.1
   
   # Image picker for camera/gallery
   image_picker: ^1.0.4
@@ -35,7 +35,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   
   # JSON serialization
-  json_annotation: ^4.8.1
+  json_annotation: ^4.9.0
 
 dev_dependencies:
   flutter_test:

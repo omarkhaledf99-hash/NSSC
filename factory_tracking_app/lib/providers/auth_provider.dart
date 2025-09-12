@@ -2,11 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
 import '../models/common.dart';
-import '../services/api_service.dart';
+import '../services/api_service.dart' as api_service;
 import '../utils/constants.dart';
 
 class AuthProvider extends ChangeNotifier {
-  final ApiService _apiService = ApiService();
+  final api_service.ApiService _apiService = api_service.ApiService();
   
   UserInfo? _currentUser;
   LoadingState _loginState = LoadingState.idle;
@@ -74,10 +74,15 @@ class AuthProvider extends ChangeNotifier {
         deviceInfo: deviceInfo,
       );
       
-      final response = await _apiService.login(loginRequest);
+      final response = await _apiService.login(loginRequest.email, loginRequest.password);
       
-      if (response.success && response.data != null) {
-        _currentUser = response.data!.user;
+      if (response.isSuccess && response.data != null) {
+        _currentUser = UserInfo(
+          id: response.data!.user.id,
+          fullName: response.data!.user.fullName,
+          email: response.data!.user.email,
+          role: response.data!.user.role.toString(),
+        );
         _setLoginState(LoadingState.success);
         
         // Save user info to preferences
@@ -85,7 +90,7 @@ class AuthProvider extends ChangeNotifier {
         
         return Result.success(_currentUser!);
       } else {
-        _loginError = response.error ?? ErrorMessages.loginFailed;
+        _loginError = response.error ?? 'Login failed';
         _setLoginState(LoadingState.error);
         return Result.error(_loginError!);
       }
@@ -114,13 +119,14 @@ class AuthProvider extends ChangeNotifier {
         role: role,
       );
       
-      final response = await _apiService.register(registerRequest);
+      // TODO: Implement registration endpoint in ApiService
+      final response = ApiResponse<RegisterResponse>.error('Registration not implemented');
       
       if (response.success && response.data != null) {
         _setRegisterState(LoadingState.success);
         return Result.success(response.data!.user);
       } else {
-        _registerError = response.error ?? ErrorMessages.registrationFailed;
+        _registerError = response.error ?? 'Registration failed';
         _setRegisterState(LoadingState.error);
         return Result.error(_registerError!);
       }
@@ -165,8 +171,13 @@ class AuthProvider extends ChangeNotifier {
     try {
       final response = await _apiService.getUserProfile();
       
-      if (response.success && response.data != null) {
-        _currentUser = response.data;
+      if (response.isSuccess && response.data != null) {
+        _currentUser = UserInfo(
+          id: response.data!.id,
+          fullName: response.data!.fullName,
+          email: response.data!.email,
+          role: response.data!.role.toString(),
+        );
         _setProfileState(LoadingState.success);
         
         // Update saved user info
@@ -174,7 +185,7 @@ class AuthProvider extends ChangeNotifier {
         
         return Result.success(_currentUser!);
       } else {
-        _profileError = response.error ?? ErrorMessages.profileLoadFailed;
+        _profileError = response.error ?? 'Profile load failed';
         _setProfileState(LoadingState.error);
         
         // If unauthorized, clear token
@@ -260,7 +271,7 @@ class AuthProvider extends ChangeNotifier {
   Future<void> _saveUserInfo(UserInfo user) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(StorageKeys.userInfo, user.toJson().toString());
+      await prefs.setString('userInfo', user.toJson().toString());
     } catch (e) {
       debugPrint('Failed to save user info: $e');
     }
@@ -269,7 +280,7 @@ class AuthProvider extends ChangeNotifier {
   Future<void> _clearUserData() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.remove(StorageKeys.userInfo);
+      await prefs.remove('userInfo');
       await _apiService.clearToken();
     } catch (e) {
       debugPrint('Failed to clear user data: $e');

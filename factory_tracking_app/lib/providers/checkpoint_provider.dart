@@ -78,7 +78,7 @@ class CheckPointProvider extends ChangeNotifier {
     try {
       final response = await _apiService.getCheckPoints();
       
-      if (response.success && response.data != null) {
+      if (response.isSuccess && response.data != null) {
         _checkPoints = response.data!;
         _setCheckPointsState(LoadingState.success);
         return Result.success(_checkPoints);
@@ -106,7 +106,7 @@ class CheckPointProvider extends ChangeNotifier {
     try {
       final response = await _apiService.getCheckPointLogs();
       
-      if (response.success && response.data != null) {
+      if (response.isSuccess && response.data != null) {
         _checkPointLogs = response.data!;
         _setLogsState(LoadingState.success);
         return Result.success(_checkPointLogs);
@@ -123,36 +123,33 @@ class CheckPointProvider extends ChangeNotifier {
   }
   
   // Load admin checkpoint logs with pagination
-  Future<Result<AdminCheckPointLogsResponse>> loadAdminLogs({
-    int page = 1,
-    int pageSize = 20,
-    bool append = false,
-  }) async {
-    _setAdminLogsState(LoadingState.loading);
-    _adminLogsError = null;
-    
-    try {
-      final response = await _apiService.getAdminCheckPointLogs(
-        page: page,
-        pageSize: pageSize,
-      );
-      
-      if (response.success && response.data != null) {
-        final logsResponse = response.data!;
-        
-        if (append && page > 1) {
-          _adminLogs.addAll(logsResponse.logs);
-        } else {
-          _adminLogs = logsResponse.logs;
-        }
-        
-        _currentPage = logsResponse.page;
-        _totalPages = logsResponse.totalPages;
-        _totalCount = logsResponse.totalCount;
-        _hasNextPage = page < logsResponse.totalPages;
-        
-        _setAdminLogsState(LoadingState.success);
-        return Result.success(logsResponse);
+  Future<Result<List<CheckPointLog>>> loadAdminLogs({
+     int page = 1,
+     int pageSize = 20,
+     bool append = false,
+   }) async {
+     _setAdminLogsState(LoadingState.loading);
+     _adminLogsError = null;
+     
+     try {
+       final response = await _apiService.getAdminCheckPointLogs();
+       
+       if (response.isSuccess && response.data != null) {
+         final logsResponse = response.data!;
+         
+         if (append && page > 1) {
+           _checkPointLogs.addAll(logsResponse);
+         } else {
+           _checkPointLogs = logsResponse;
+         }
+         
+         _currentPage = page;
+         _totalPages = 1;
+         _totalCount = logsResponse.length;
+         _hasNextPage = false;
+         
+         _setAdminLogsState(LoadingState.success);
+         return Result.success(logsResponse);
       } else {
         _adminLogsError = response.error ?? ErrorMessages.dataLoadFailed;
         _setAdminLogsState(LoadingState.error);
@@ -182,9 +179,12 @@ class CheckPointProvider extends ChangeNotifier {
         imageUrls: imageUrls,
       );
       
-      final response = await _apiService.submitCheckPointScan(checkPointId, scanRequest);
+      final response = await _apiService.submitCheckPointScan(
+          checkPointId,
+          scanRequest.toJson(),
+        );
       
-      if (response.success) {
+      if (response.isSuccess) {
         _setScanState(LoadingState.success);
         
         // Refresh logs to include the new scan
@@ -251,7 +251,7 @@ class CheckPointProvider extends ChangeNotifier {
   }
   
   // Load next page of admin logs
-  Future<Result<AdminCheckPointLogsResponse>> loadNextPage() async {
+  Future<Result<List<CheckPointLog>>> loadNextPage() async {
     if (!_hasNextPage) {
       return Result.error('No more pages available');
     }

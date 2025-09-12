@@ -1,8 +1,26 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/constants.dart';
 import '../utils/network_helper.dart';
+import '../models/user.dart';
+import '../models/checkpoint.dart';
+import '../models/stopcard.dart';
+import '../models/common.dart';
+
+class ErrorMessages {
+  static const String validationError = 'Invalid input data';
+  static const String unauthorizedError = 'Authentication required';
+  static const String forbiddenError = 'Access denied';
+  static const String notFoundError = 'Resource not found';
+  static const String serverError = 'Server error occurred';
+  static const String networkError = 'Network connection failed';
+  static const String unknownError = 'An unexpected error occurred';
+  static const String timeoutError = 'Request timeout';
+  static const String dataLoadFailed = 'Failed to load data';
+  static const String submitFailed = 'Failed to submit data';
+}
 
 class ApiService {
   static const String _baseUrl = ApiConstants.baseUrl;
@@ -159,7 +177,7 @@ class ApiService {
         
         return ApiResponse.success(jsonData as T?);
       } else {
-        String errorMessage = _getErrorMessageForStatusCode(statusCode);
+        String errorMessage = ApiService._getErrorMessageForStatusCode(statusCode);
         
         try {
           final errorData = jsonDecode(response.body);
@@ -181,7 +199,7 @@ class ApiService {
   }
   
   // Get appropriate error message based on HTTP status code
-  String _getErrorMessageForStatusCode(int statusCode) {
+  static String _getErrorMessageForStatusCode(int statusCode) {
     switch (statusCode) {
       case 400:
         return ErrorMessages.validationError;
@@ -262,18 +280,43 @@ extension ApiServiceMethods on ApiService {
     return response;
   }
   
-  Future<ApiResponse<CheckPointScanResponse>> submitCheckPointScan(
-    int checkPointId,
-    String qrCode,
+  // Get checkpoint logs
+  Future<ApiResponse<List<CheckPointLog>>> getCheckPointLogs() async {
+    final response = await _makeRequest<List<CheckPointLog>>(
+      'GET',
+      '/CheckPoints/logs',
+      fromJson: (json) {
+        final List<dynamic> logsJson = json['logs'] ?? json;
+        return logsJson.map((item) => CheckPointLog.fromJson(item)).toList();
+      },
+    );
+    
+    return response;
+  }
+
+  // Get admin checkpoint logs
+  Future<ApiResponse<List<CheckPointLog>>> getAdminCheckPointLogs() async {
+    final response = await _makeRequest<List<CheckPointLog>>(
+      'GET',
+      '/CheckPoints/admin/logs',
+      fromJson: (json) {
+        final List<dynamic> logsJson = json['logs'] ?? json;
+        return logsJson.map((item) => CheckPointLog.fromJson(item)).toList();
+      },
+    );
+    
+    return response;
+  }
+
+  Future<ApiResponse<CheckPointLog>> submitCheckPointScan(
+    String checkPointId,
+    Map<String, dynamic> scanRequest,
   ) async {
-    final response = await _makeRequest<CheckPointScanResponse>(
+    final response = await _makeRequest<CheckPointLog>(
       'POST',
       '/CheckPoints/$checkPointId/scan',
-      body: {
-        'qrCode': qrCode,
-        'scannedAt': DateTime.now().toIso8601String(),
-      },
-      fromJson: (json) => CheckPointScanResponse.fromJson(json),
+      body: scanRequest,
+      fromJson: (json) => CheckPointLog.fromJson(json),
     );
     
     return response;
@@ -335,7 +378,7 @@ extension ApiServiceMethods on ApiService {
         'Authorization': 'Bearer $token',
       };
       
-      final uri = Uri.parse('$_baseUrl/Image/upload');
+      final uri = Uri.parse('${ApiService._baseUrl}/Image/upload');
       final request = http.MultipartRequest('POST', uri);
       request.headers.addAll(headers);
       
@@ -388,218 +431,13 @@ extension ApiServiceMethods on ApiService {
   }
   
   // User Profile
-  Future<ApiResponse<UserProfile>> getUserProfile() async {
-    final response = await _makeRequest<UserProfile>(
+  Future<ApiResponse<User>> getUserProfile() async {
+    final response = await _makeRequest<User>(
       'GET',
       '/Users/profile',
-      fromJson: (json) => UserProfile.fromJson(json),
+      fromJson: (json) => User.fromJson(json),
     );
     
     return response;
-  }
-}
-
-// Data Models
-class LoginResponse {
-  final String token;
-  final UserInfo user;
-  
-  LoginResponse({required this.token, required this.user});
-  
-  factory LoginResponse.fromJson(Map<String, dynamic> json) {
-    return LoginResponse(
-      token: json['token'] ?? '',
-      user: UserInfo.fromJson(json['user'] ?? {}),
-    );
-  }
-}
-
-class UserInfo {
-  final int id;
-  final String email;
-  final String firstName;
-  final String lastName;
-  final String role;
-  
-  UserInfo({
-    required this.id,
-    required this.email,
-    required this.firstName,
-    required this.lastName,
-    required this.role,
-  });
-  
-  factory UserInfo.fromJson(Map<String, dynamic> json) {
-    return UserInfo(
-      id: json['id'] ?? 0,
-      email: json['email'] ?? '',
-      firstName: json['firstName'] ?? '',
-      lastName: json['lastName'] ?? '',
-      role: json['role'] ?? '',
-    );
-  }
-}
-
-class CheckPoint {
-  final int id;
-  final String name;
-  final String location;
-  final String qrCode;
-  final String status;
-  final DateTime createdAt;
-  
-  CheckPoint({
-    required this.id,
-    required this.name,
-    required this.location,
-    required this.qrCode,
-    required this.status,
-    required this.createdAt,
-  });
-  
-  factory CheckPoint.fromJson(Map<String, dynamic> json) {
-    return CheckPoint(
-      id: json['id'] ?? 0,
-      name: json['name'] ?? '',
-      location: json['location'] ?? '',
-      qrCode: json['qrCode'] ?? '',
-      status: json['status'] ?? '',
-      createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
-    );
-  }
-}
-
-class CheckPointScanResponse {
-  final bool success;
-  final String message;
-  final CheckPointLog? log;
-  
-  CheckPointScanResponse({
-    required this.success,
-    required this.message,
-    this.log,
-  });
-  
-  factory CheckPointScanResponse.fromJson(Map<String, dynamic> json) {
-    return CheckPointScanResponse(
-      success: json['success'] ?? false,
-      message: json['message'] ?? '',
-      log: json['log'] != null ? CheckPointLog.fromJson(json['log']) : null,
-    );
-  }
-}
-
-class CheckPointLog {
-  final int id;
-  final int checkPointId;
-  final int userId;
-  final DateTime scannedAt;
-  final String? imageUrls;
-  
-  CheckPointLog({
-    required this.id,
-    required this.checkPointId,
-    required this.userId,
-    required this.scannedAt,
-    this.imageUrls,
-  });
-  
-  factory CheckPointLog.fromJson(Map<String, dynamic> json) {
-    return CheckPointLog(
-      id: json['id'] ?? 0,
-      checkPointId: json['checkPointId'] ?? 0,
-      userId: json['userId'] ?? 0,
-      scannedAt: DateTime.tryParse(json['scannedAt'] ?? '') ?? DateTime.now(),
-      imageUrls: json['imageUrls'],
-    );
-  }
-}
-
-class StopCard {
-  final int id;
-  final String title;
-  final String description;
-  final String priority;
-  final String status;
-  final List<String> imageUrls;
-  final int createdBy;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
-  
-  StopCard({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.priority,
-    required this.status,
-    required this.imageUrls,
-    required this.createdBy,
-    required this.createdAt,
-    this.updatedAt,
-  });
-  
-  factory StopCard.fromJson(Map<String, dynamic> json) {
-    return StopCard(
-      id: json['id'] ?? 0,
-      title: json['title'] ?? '',
-      description: json['description'] ?? '',
-      priority: json['priority'] ?? '',
-      status: json['status'] ?? '',
-      imageUrls: List<String>.from(json['imageUrls'] ?? []),
-      createdBy: json['createdBy'] ?? 0,
-      createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
-      updatedAt: json['updatedAt'] != null 
-          ? DateTime.tryParse(json['updatedAt']) 
-          : null,
-    );
-  }
-}
-
-class ImageUploadResponse {
-  final String fileName;
-  final String url;
-  final int fileSize;
-  
-  ImageUploadResponse({
-    required this.fileName,
-    required this.url,
-    required this.fileSize,
-  });
-  
-  factory ImageUploadResponse.fromJson(Map<String, dynamic> json) {
-    return ImageUploadResponse(
-      fileName: json['fileName'] ?? '',
-      url: json['url'] ?? '',
-      fileSize: json['fileSize'] ?? 0,
-    );
-  }
-}
-
-class UserProfile {
-  final int id;
-  final String email;
-  final String firstName;
-  final String lastName;
-  final String role;
-  final DateTime createdAt;
-  
-  UserProfile({
-    required this.id,
-    required this.email,
-    required this.firstName,
-    required this.lastName,
-    required this.role,
-    required this.createdAt,
-  });
-  
-  factory UserProfile.fromJson(Map<String, dynamic> json) {
-    return UserProfile(
-      id: json['id'] ?? 0,
-      email: json['email'] ?? '',
-      firstName: json['firstName'] ?? '',
-      lastName: json['lastName'] ?? '',
-      role: json['role'] ?? '',
-      createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
-    );
   }
 }

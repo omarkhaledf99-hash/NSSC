@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'common.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(genericArgumentFactories: true)
 class ApiResponse<T> {
   final bool success;
   final String? message;
@@ -96,7 +96,7 @@ class MultipleImageUploadResponse {
   }
 }
 
-@JsonSerializable()
+@JsonSerializable(genericArgumentFactories: true)
 class PaginatedResponse<T> {
   final List<T> data;
   final int totalCount;
