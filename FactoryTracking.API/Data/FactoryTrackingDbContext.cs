@@ -95,6 +95,8 @@ namespace FactoryTracking.API.Data
         {
             // Seed admin user
             var adminUserId = Guid.NewGuid();
+            var normalUserId = Guid.NewGuid();
+            
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
@@ -103,6 +105,16 @@ namespace FactoryTracking.API.Data
                     PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
                     Role = UserRole.Admin,
                     FullName = "System Administrator",
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true
+                },
+                new User
+                {
+                    Id = normalUserId,
+                    Email = "user@factory.com",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("User123!"),
+                    Role = UserRole.NormalUser,
+                    FullName = "Test User",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true
                 }

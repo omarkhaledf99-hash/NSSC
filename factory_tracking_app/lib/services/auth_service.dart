@@ -9,7 +9,7 @@ class AuthService {
   static const String _rememberMeKey = 'remember_me';
   
   // Base URL for API - replace with your actual API endpoint
-  static const String baseUrl = 'https://your-api-endpoint.com';
+  static const String baseUrl = 'http://localhost:5000';
 
   /// Check if user is logged in
   static Future<bool> isLoggedIn() async {
@@ -32,7 +32,7 @@ class AuthService {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/login'),
+        Uri.parse('$baseUrl/api/Auth/login'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -94,7 +94,7 @@ class AuthService {
   static Future<bool> _validateToken(String token) async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/auth/validate'),
+        Uri.parse('$baseUrl/api/Auth/validate'),
         headers: {
           'Authorization': 'Bearer $token',
         },

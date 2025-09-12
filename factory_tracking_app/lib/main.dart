@@ -4,8 +4,14 @@ import 'providers/auth_provider.dart';
 import 'providers/checkpoint_provider.dart';
 import 'providers/stopcard_provider.dart';
 import 'screens/splash_screen.dart';
+import 'services/offline_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize offline service
+  await OfflineService().initialize();
+  
   runApp(const MyApp());
 }
 
@@ -25,13 +31,16 @@ class MyApp extends StatelessWidget {
         // StopCard provider
         ChangeNotifierProvider(create: (_) => StopCardProvider()),
       ],
-      child: MaterialApp(
-        title: 'Factory Tracking App',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
+      child: ConnectivityIndicator(
+        child: MaterialApp(
+          title: 'Factory Tracking App',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          home: const SplashScreen(),
+          debugShowCheckedModeBanner: false,
         ),
-        home: const SplashScreen(),
       ),
     );
   }

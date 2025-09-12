@@ -1,16 +1,16 @@
 // API Configuration
 class ApiConstants {
   // Base URLs
-  static const String baseUrl = 'http://localhost:5000/api';
-  static const String baseUrlProduction = 'https://your-production-api.com/api';
+  static const String baseUrl = 'http://localhost:5000';
+  static const String baseUrlProduction = 'https://your-production-api.com';
   
   // Endpoints
-  static const String loginEndpoint = '/Auth/login';
-  static const String registerEndpoint = '/Auth/register';
-  static const String userProfileEndpoint = '/Users/profile';
-  static const String checkPointsEndpoint = '/CheckPoints';
-  static const String stopCardsEndpoint = '/StopCards';
-  static const String imageUploadEndpoint = '/Image/upload';
+  static const String loginEndpoint = '/api/Auth/login';
+  static const String registerEndpoint = '/api/Auth/register';
+  static const String userProfileEndpoint = '/api/Users/profile';
+  static const String checkPointsEndpoint = '/api/CheckPoints';
+  static const String stopCardsEndpoint = '/api/StopCards';
+  static const String imageUploadEndpoint = '/api/Image/upload';
   
   // Request Configuration
   static const int timeoutSeconds = 30;
