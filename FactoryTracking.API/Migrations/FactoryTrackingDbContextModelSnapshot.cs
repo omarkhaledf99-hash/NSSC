@@ -53,8 +53,8 @@ namespace FactoryTracking.API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("37ecfb59-c8c6-4a80-a12a-c1abf2aacfb6"),
-                            CreatedAt = new DateTime(2025, 9, 4, 21, 24, 9, 528, DateTimeKind.Utc).AddTicks(2290),
+                            Id = new Guid("2732ffe4-0d6a-47c0-a67f-afd49ae7eda4"),
+                            CreatedAt = new DateTime(2025, 9, 12, 18, 7, 49, 527, DateTimeKind.Utc).AddTicks(4270),
                             IsActive = true,
                             Location = "Building 1, Floor 1",
                             Name = "Assembly Line A - Start",
@@ -62,8 +62,8 @@ namespace FactoryTracking.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("4efe5eab-e14e-45d9-8573-4d26edc4736d"),
-                            CreatedAt = new DateTime(2025, 9, 4, 21, 24, 9, 528, DateTimeKind.Utc).AddTicks(2300),
+                            Id = new Guid("0fce2f25-da54-475b-a6b3-cbab5dfd9679"),
+                            CreatedAt = new DateTime(2025, 9, 12, 18, 7, 49, 527, DateTimeKind.Utc).AddTicks(4270),
                             IsActive = true,
                             Location = "Building 1, Floor 2",
                             Name = "Quality Control Station",
@@ -71,8 +71,8 @@ namespace FactoryTracking.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("901368bb-1299-43da-9ecf-d2a115deb100"),
-                            CreatedAt = new DateTime(2025, 9, 4, 21, 24, 9, 528, DateTimeKind.Utc).AddTicks(2300),
+                            Id = new Guid("4463e280-c432-4d1d-8b99-99a8573cc46c"),
+                            CreatedAt = new DateTime(2025, 9, 12, 18, 7, 49, 527, DateTimeKind.Utc).AddTicks(4280),
                             IsActive = true,
                             Location = "Building 2, Floor 1",
                             Name = "Packaging Department",
@@ -80,8 +80,8 @@ namespace FactoryTracking.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("bc32af2c-af51-4b4b-8626-51aab56b3c41"),
-                            CreatedAt = new DateTime(2025, 9, 4, 21, 24, 9, 528, DateTimeKind.Utc).AddTicks(2310),
+                            Id = new Guid("a503a7a9-0eef-4a4f-9a91-0f2e03593d2a"),
+                            CreatedAt = new DateTime(2025, 9, 12, 18, 7, 49, 527, DateTimeKind.Utc).AddTicks(4280),
                             IsActive = true,
                             Location = "Main Entrance",
                             Name = "Safety Equipment Check",
@@ -89,8 +89,8 @@ namespace FactoryTracking.API.Migrations
                         },
                         new
                         {
-                            Id = new Guid("46d369e1-6383-43f2-949f-0f5ea7014c42"),
-                            CreatedAt = new DateTime(2025, 9, 4, 21, 24, 9, 528, DateTimeKind.Utc).AddTicks(2320),
+                            Id = new Guid("4469f8b0-43b6-4748-a1df-773701ca6c86"),
+                            CreatedAt = new DateTime(2025, 9, 12, 18, 7, 49, 527, DateTimeKind.Utc).AddTicks(4300),
                             IsActive = true,
                             Location = "Building 3, Loading Bay",
                             Name = "Warehouse Exit",
@@ -236,13 +236,23 @@ namespace FactoryTracking.API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a876fd5d-3513-45ab-8349-1b4fff7574d5"),
-                            CreatedAt = new DateTime(2025, 9, 4, 21, 24, 9, 528, DateTimeKind.Utc).AddTicks(2160),
+                            Id = new Guid("36ee7105-8498-458b-af27-0f47bbf5deb4"),
+                            CreatedAt = new DateTime(2025, 9, 12, 18, 7, 49, 394, DateTimeKind.Utc).AddTicks(3580),
                             Email = "admin@factory.com",
                             FullName = "System Administrator",
                             IsActive = true,
-                            PasswordHash = "$2a$11$eAAikS85ytbTfd8YRIoFI.sQaSzCEJgsHclzMS4KG7kK/Y/6F4YBu",
+                            PasswordHash = "$2a$11$FlCuKAoCmM5nLEKEt9d5z.65TglR6hNryD9Tkz8RfZXVOp2WU5pXe",
                             Role = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("bd5c0530-057f-493a-966e-4cb8c07ee671"),
+                            CreatedAt = new DateTime(2025, 9, 12, 18, 7, 49, 527, DateTimeKind.Utc).AddTicks(3930),
+                            Email = "user@factory.com",
+                            FullName = "Test User",
+                            IsActive = true,
+                            PasswordHash = "$2a$11$dbkf4YcA18mrny/1vh/0FuBqRTBr93b0F1fRMJaCYsVPOnT1yyh1S",
+                            Role = 0
                         });
                 });
 

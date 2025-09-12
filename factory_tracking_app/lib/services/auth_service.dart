@@ -8,8 +8,8 @@ class AuthService {
   static const String _userRoleKey = 'user_role';
   static const String _rememberMeKey = 'remember_me';
   
-  // Base URL for API - replace with your actual API endpoint
-  static const String baseUrl = 'http://localhost:5000';
+  // Base URL for API - using 10.0.2.2 for Android emulator to reach host machine
+  static const String baseUrl = 'http://10.0.2.2:5000';
 
   /// Check if user is logged in
   static Future<bool> isLoggedIn() async {

@@ -89,18 +89,29 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _navigateToDashboard(String? userRole) {
-    // For now, show a success message
-    // Replace with actual navigation when dashboards are implemented
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Login successful! Role: ${userRole ?? 'Unknown'}'),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 3),
-      ),
-    );
-    
-    // TODO: Navigate to appropriate dashboard based on role
-    // Navigator.of(context).pushReplacementNamed('/dashboard');
+    // Navigate based on user role
+    if (userRole == 'Admin') {
+      // For now, show success message for admin
+      // TODO: Navigate to admin dashboard when implemented
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Admin login successful! Admin dashboard coming soon.'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 3),
+        ),
+      );
+    } else if (userRole == 'NormalUser') {
+      // Navigate to normal user dashboard
+      Navigator.of(context).pushReplacementNamed('/normal-dashboard');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Login successful! Role: ${userRole ?? 'Unknown'}'),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }
   }
 
   @override
